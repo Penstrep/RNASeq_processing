@@ -34,7 +34,12 @@ while read col1 col2 col3 col4; do
 done < $sample_table
 
 # run fastqc over each iteration of fq1 and fq2 arrays
-for i in "${!name[@]}"; do
-  $fastqc ${fq1[i]} -o ${out_dir}/fastqc
-  $fastqc ${fq2[i]} -o ${out_dir}/fastqc
-done
+if [[ ${paired_end} == yes ]]; then
+  for i in "${!name[@]}"; do
+    $fastqc ${fq1[i]} -o ${out_dir}/fastqc
+    $fastqc ${fq2[i]} -o ${out_dir}/fastqc
+  done
+} elif [[ ${paired_end} == no ]]; then
+  for i in "${!name[@]}"; do
+    $fastqc ${fq1[i]} -o ${out_dir}/fastqc
+  done

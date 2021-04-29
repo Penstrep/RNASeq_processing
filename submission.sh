@@ -28,7 +28,7 @@ counts_step=/scratch/users/k2142172/scripts/rp_counts_matrix.sh
 export config=$config
 export sample_table=$sample_table
 
-sbatch $fastqc_step
+#sbatch $fastqc_step
 #sbatch $multiqc_step
 #sbatch $alignment_step
 #sbatch $index_step
