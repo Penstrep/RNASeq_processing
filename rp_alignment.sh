@@ -36,9 +36,13 @@ while read col1 col2 col3 col4; do
 done < $sample_table
 
 # combine fq1 and fq2 array items into one array for paired ends
-for i in "${!name[@]}"; do
-  mates[i]=$(echo ${fq1[i]} ${fq2[i]})
-done
+if [[ ${paired_end} == yes ]]; then
+  for i in "${!name[@]}"; do
+    mates[i]=$(echo ${fq1[i]} ${fq2[i]})
+  done;
+elif [[ $paired_end} == no ]]; then
+  mates=(${fq1[@]})
+fi
 
 # load star genome
 $star --genomeDir ${resources_dir}/${build}/STAR --genomeLoad LoadAndExit
