@@ -38,8 +38,9 @@ if [[ ${paired_end} == yes ]]; then
   for i in "${!name[@]}"; do
     $fastqc ${fq1[i]} -o ${out_dir}/fastqc
     $fastqc ${fq2[i]} -o ${out_dir}/fastqc
-  done
-} elif [[ ${paired_end} == no ]]; then
+  done;
+elif [[ ${paired_end} == no ]]; then
   for i in "${!name[@]}"; do
     $fastqc ${fq1[i]} -o ${out_dir}/fastqc
-  done
+  done;
+fi
