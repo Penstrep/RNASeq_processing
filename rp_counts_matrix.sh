@@ -30,7 +30,7 @@ featurecounts=/scratch/users/k2142172/packages/subread-2.0.1-Linux-x86_64/bin/fe
 # variable with list of bams
 bams=$(ls ${out_dir}/processed_bams/*.bam)
 
-# set strandedness
+# set strandedness status
 if [[ $strand == 'Unstranded' ]]; then
   strand_code=0;
 elif [[ $strand == 'Forward' ]]; then
