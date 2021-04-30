@@ -19,11 +19,11 @@ args=("$@")
 sample_table=${args[0]}
 config=${args[1]}
 
-fastqc_step=/scratch/users/k2142172/scripts/pipeline/rp_fastqc.sh
-multiqc_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc.sh
-alignment_step=/scratch/users/k2142172/scripts/pipeline/rp_alignment.sh
-index_step=/scratch/users/k2142172/scripts/pipeline/rp_index_bams.sh
-counts_step=/scratch/users/k2142172/scripts/pipeline/rp_counts_matrix.sh
+fastqc_step=/scratch/users/k2142172/scripts/rp_fastqc.sh
+multiqc_step=/scratch/users/k2142172/scripts/rp_multiqc.sh
+alignment_step=/scratch/users/k2142172/scripts/rp_alignment.sh
+index_step=/scratch/users/k2142172/scripts/rp_index_bams.sh
+counts_step=/scratch/users/k2142172/scripts/rp_counts_matrix.sh
 
 export config=$config
 export sample_table=$sample_table
