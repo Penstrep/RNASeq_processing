@@ -40,7 +40,7 @@ if [[ ${paired_end} == yes ]]; then
   for i in "${!name[@]}"; do
     mates[i]=$(echo ${fq1[i]} ${fq2[i]})
   done;
-elif [[ $paired_end} == no ]]; then
+elif [[ ${paired_end} == no ]]; then
   mates=(${fq1[@]})
 fi
 
