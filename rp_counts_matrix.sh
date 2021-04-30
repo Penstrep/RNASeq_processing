@@ -30,13 +30,22 @@ featurecounts=/scratch/users/k2142172/packages/subread-2.0.1-Linux-x86_64/bin/fe
 # variable with list of bams
 bams=$(ls ${out_dir}/processed_bams/*.bam)
 
+# set strandedness
+if [[ $strand == 'Unstranded' ]]; then
+  strand_code=0;
+elif [[ $strand == 'Forward' ]]; then
+  strand_code=1;
+elif [[ $strand == 'Reverse' ]]; then
+  strand_code=2;
+fi
+
 # run featurecounts over all bams to give one gene counts matrix
 $featurecounts \
   -a ${resources_dir}/${build}/Homo_sapiens.GRCh38.103.gtf \
   -F GTF \
   -g gene_id \
   -p \
-  -s 2 \
+  -s $strand_code \
   -T 8 \
   --verbose \
   -o ${out_dir}/gene_expression2/${project}_gene_counts.tab \
