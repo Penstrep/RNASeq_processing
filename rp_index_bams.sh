@@ -3,7 +3,7 @@
 #SBATCH --partition=brc
 #SBATCH --time=4:00:00
 #SBATCH --mem=8G
-#SBATCH --job-name=rp_index_bam
+#SBATCH --job-name=r_pipeline
 #SBATCH --output=/scratch/users/k2142172/tests/rp_index_bam.out
 #SBATCH --verbose
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --partition=brc
-#SBATCH --time=72:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=8G
-#SBATCH --job-name=rp_fastqc
+#SBATCH --job-name=r_pipeline
 #SBATCH --verbose
 #SBATCH --output=/scratch/users/k2142172/tests/rp_fastqc.out
 

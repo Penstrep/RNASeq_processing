@@ -5,7 +5,7 @@
 #SBATCH --mem=42G
 #SBATCH --ntasks=8
 #SBATCH --nodes=1
-#SBATCH --job-name=rp_alignment
+#SBATCH --job-name=r_pipeline
 #SBATCH --output=/scratch/users/k2142172/tests/rp_alignment.out
 #SBATCH --verbose
 

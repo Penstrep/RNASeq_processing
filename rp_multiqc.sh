@@ -3,7 +3,7 @@
 #SBATCH --partition=brc
 #SBATCH --time=1:00:00
 #SBATCH --mem=1G
-#SBATCH --job-name=rp_multiqc
+#SBATCH --job-name=r_pipeline
 #SBATCH --verbose
 #SBATCH --output=/scratch/users/k2142172/tests/rp_multiqc.out
 
