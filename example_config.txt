@@ -1,0 +1,13 @@
+# option - setting
+# project name to use
+project=verstockt_ibd
+# reference genome build options: GRCh38
+build=GRCh38
+# paired end sequencing? options: yes/no
+paired_end=no
+# stranded library prep kit used? options: Forward/Reverse/Unstranded
+strand=Unstranded
+# path to where to put output dirs and files
+out_dir=/scratch/users/k2142172/tests/seq
+# path to where resources are held eg STAR genome index, reference build fasta and gtf
+resources_dir=/scratch/users/k2142172/resources

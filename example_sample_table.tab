@@ -1,0 +1,2 @@
+sample_name_1	/path/to/sample_1/gzipped/fastq/file/1	/path/to/sample_1/gzipped/fastq/file/2/if/paired/end/else/NA	NA
+sample_name_2	/path/to/sample_2/gzipped/fastq/file/1	/path/to/sample_1/gzipped/fastq/file/2/if/paired/end/else/NA	NA
