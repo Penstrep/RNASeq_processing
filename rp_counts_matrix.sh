@@ -20,15 +20,19 @@ set -o noclobber
 . ./$config
 
 # create output dir if necessary, and redirect log and err files there
-mkdir -p ${out_dir}/gene_expression
+mkdir -p ${out_dir}/gene_expression/${aligner}
 
-exec >${out_dir}/gene_expression/rp_counts_matrix.out 2>${out_dir}/gene_expression/rp_counts_matrix.err
+exec >${out_dir}/gene_expression/${aligner}/rp_counts_matrix.out 2>${out_dir}/gene_expression/${aligner}/rp_counts_matrix.err
 
 # path to tools
 featurecounts=/scratch/users/k2142172/packages/subread-2.0.1-Linux-x86_64/bin/featureCounts
 
 # variable with list of bams
-bams=$(ls ${out_dir}/processed_bams/*.bam)
+if [[ $aligner == STAR ]]; then
+  bams=$(ls ${out_dir}/processed_bams/*.bam);
+elif [[ $aligner == kallisto ]]; then
+  bams=$(ls ${out_dir}/kallisto/*.bam);
+fi
 
 # set strandedness status
 if [[ $strand == 'Unstranded' ]]; then
@@ -48,5 +52,5 @@ $featurecounts \
   -s $strand_code \
   -T 8 \
   --verbose \
-  -o ${out_dir}/gene_expression/${project}_gene_counts.tab \
+  -o ${out_dir}/gene_expression/${aligner}/${project}_gene_counts.tab \
   $bams

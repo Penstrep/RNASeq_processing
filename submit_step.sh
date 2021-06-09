@@ -29,6 +29,8 @@ elif [[ $step == multiqc_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc.sh
 elif [[ $step == alignment_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_alignment.sh
+elif [[ $step == kallisto_step ]]; then
+    sbatch /scratch/users/k2142172/scripts/pipeline/rp_kallisto_quant.sh
 elif [[ $step == index_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_index_bams.sh
 elif [[ $step == counts_step ]]; then
