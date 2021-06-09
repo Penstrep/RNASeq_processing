@@ -43,9 +43,11 @@ elif [[ $strand == 'Reverse' ]]; then
   strand_code=2;
 fi
 
+gtf=$(ls ${resources_dir}/${build}/*.gtf)
+
 # run featurecounts over all bams to give one gene counts matrix
 $featurecounts \
-  -a ${resources_dir}/${build}/Homo_sapiens.GRCh38.103.gtf \
+  -a $gtf \
   -F GTF \
   -g gene_id \
   -p \

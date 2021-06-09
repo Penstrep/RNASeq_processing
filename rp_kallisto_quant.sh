@@ -13,7 +13,7 @@
 set -e
 # print shell input lines as they are read for debugging
 set -v
-# prevents output redirection from overwriting existing files 
+# prevents output redirection from overwriting existing files
 #set -o noclobber
 
 # import config variables
@@ -25,8 +25,8 @@ exec >/${out_dir}/kallisto/${project}_rp_kallisto_quant.out 2>${out_dir}/kallist
 
 # path to tools
 kallisto=/scratch/users/k2142172/packages/kallisto/kallisto
-kallisto_index=/scratch/users/k2142172/resources/${build}/kallisto/kallisto.idx
-gtf=/scratch/users/k2142172/resources/${build}/Homo_sapiens.GRCh38.103.gtf
+kallisto_index=${resources_dir}/${build}/kallisto/kallisto.idx
+gtf=$(ls ${resources_dir}/${build}/*.gtf)
 #samtools=/scratch/users/k2142172/packages/samtools-1.11/bin/samtools
 
 # import sample table as arrays for each column
@@ -34,16 +34,16 @@ while read col1 col2 col3 col4; do
   name+=($col1)
   fq1+=($col2)
   fq2+=($col3)
-  cond+=($col4) 
+  cond+=($col4)
 done < $sample_table
 
 # combine fq1 and fq2 array items into one array for paired ends
 if [[ ${paired_end} == yes ]]; then
   for i in "${!name[@]}"; do
     mates[i]=$(echo ${fq1[i]} ${fq2[i]})
-  done; 
+  done;
 elif [[ ${paired_end} == no ]]; then
-  mates=(${fq1[@]}) 
+  mates=(${fq1[@]})
 fi
 
 # currently only use if single and reverse stranded
@@ -61,7 +61,7 @@ for i in ${!mates[@]}; do
     ${mates[i]}
 done
 
-# reorganise dir structure 
+# reorganise dir structure
 for nm in ${name[@]}; do
   dir=${out_dir}/kallisto/${nm}
   if [[ -d $dir ]]; then
@@ -72,4 +72,3 @@ for nm in ${name[@]}; do
     rmdir ${dir};
   fi;
 done
-
