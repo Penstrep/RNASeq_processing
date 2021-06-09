@@ -1,7 +1,7 @@
 # option - setting
 # project name to use
 project=verstockt_ibd
-# reference genome build options: GRCh38
+# reference genome build options: GRCh38/GRCm39
 build=GRCh38
 # paired end sequencing? options: yes/no
 paired_end=no
