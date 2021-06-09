@@ -7,6 +7,8 @@ build=GRCh38
 paired_end=no
 # stranded library prep kit used? options: Forward/Reverse/Unstranded
 strand=Unstranded
+# aligner to use options: STAR/Kallisto
+aligner=STAR
 # path to where to put output dirs and files
 out_dir=/scratch/users/k2142172/tests/seq
 # path to where resources are held eg STAR genome index, reference build fasta and gtf
