@@ -8,7 +8,7 @@
 #SBATCH --verbose
 
 kallisto=/scratch/users/k2142172/packages/kallisto/kallisto
-fasta=/scratch/users/k2142172/resources/GRCm39/Mus_musculus.GRCm39.dna.primary_assembly.fa
+fasta=/scratch/users/k2142172/resources/GRCm39/Mus_musculus.GRCm39.cdna.all.fa
 
 mkdir -p /scratch/users/k2142172/resources/GRCm39/kallisto
 
