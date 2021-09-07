@@ -25,15 +25,21 @@ export config=$config
 
 if [[ $step == fastqc_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_fastqc.sh
-elif [[ $step == multiqc_step ]]; then
-    sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc.sh
+elif [[ $step == multiqc_fastqc_step ]]; then
+    sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc_fastqc.sh
 elif [[ $step == alignment_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_alignment.sh
+elif [[ $step == multiqc_star_step ]]; then
+    sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc_star.sh
 elif [[ $step == kallisto_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_kallisto_quant.sh
 elif [[ $step == index_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_index_bams.sh
+elif [[ $step == multiqc_samtools_step ]]; then
+    sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc_samtools.sh
 elif [[ $step == counts_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_counts_matrix.sh
+elif [[ $step == multiqc_featurecounts_step ]]; then
+    sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc_featurecounts.sh
 fi
 
