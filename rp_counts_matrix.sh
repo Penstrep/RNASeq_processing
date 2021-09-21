@@ -43,6 +43,13 @@ elif [[ $strand == 'Reverse' ]]; then
   strand_code=2;
 fi
 
+# set paired end status
+if [[ $paired_end == 'yes' ]]; then
+  paired_code="-p";
+else
+  paired_code=""
+fi
+
 gtf=$(ls ${resources_dir}/${build}/*.gtf)
 
 # run featurecounts over all bams to give one gene counts matrix
@@ -50,7 +57,7 @@ $featurecounts \
   -a $gtf \
   -F GTF \
   -g gene_id \
-  -p \
+  $paired_code \
   -s $strand_code \
   -T 8 \
   --verbose \
