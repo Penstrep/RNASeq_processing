@@ -20,23 +20,16 @@ sample_table=${args[0]}
 config=${args[1]}
 
 fastqc_step=/scratch/users/k2142172/scripts/pipeline/rp_fastqc.sh
-multiqc_fastqc_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_fastqc.sh
+multiqc_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc.sh
 alignment_step=/scratch/users/k2142172/scripts/pipeline/rp_alignment.sh
-multiqc_star_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_star.sh
 index_step=/scratch/users/k2142172/scripts/pipeline/rp_index_bams.sh
-multiqc_samtools_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_samtools.sh
 counts_step=/scratch/users/k2142172/scripts/pipeline/rp_counts_matrix.sh
-multiqc_featurecounts_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_featurecounts.sh
 
 export config=$config
 export sample_table=$sample_table
 
 sbatch --dependency=singleton $fastqc_step
-sbatch --dependency=singleton $multiqc_fastqc_step
+sbatch --dependency=singleton $multiqc_step
 sbatch --dependency=singleton $alignment_step
-sbatch --dependency=singleton $multiqc_star_step
 sbatch --dependency=singleton $index_step
-sbatch --dependency=singleton $multiqc_samtools_step
 sbatch --dependency=singleton $counts_step
-sbatch --dependency=singleton $multiqc_featurecounts_step
-
