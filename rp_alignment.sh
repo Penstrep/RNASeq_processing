@@ -45,7 +45,8 @@ elif [[ ${paired_end} == no ]]; then
 fi
 
 # load star genome
-$star --genomeDir ${resources_dir}/${build}/STAR --genomeLoad LoadAndExit
+#$star --genomeDir ${resources_dir}/${build}/STAR --genomeLoad LoadAndExit
+
 # use loaded genome to run star, iterating over each paired end array item
 # include samtools indexing of bams in iteration
 for i in ${!mates[@]}; do

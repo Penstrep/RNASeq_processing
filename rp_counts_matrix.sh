@@ -50,7 +50,7 @@ else
   paired_code=""
 fi
 
-gtf=$(ls ${resources_dir}/${build}/*.gtf)
+gtf=${resources_dir}/${build}/*.gtf
 
 # run featurecounts over all bams to give one gene counts matrix
 $featurecounts \
