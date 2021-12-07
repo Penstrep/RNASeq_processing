@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --partition=brc
-#SBATCH --time=72:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=42G
-#SBATCH --ntasks=8
-#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
 #SBATCH --job-name=r_pipeline
 #SBATCH --output=/scratch/users/k2142172/tests/rp_alignment.out
 #SBATCH --verbose
@@ -25,7 +25,6 @@ mkdir -p ${out_dir}/processed_bams
 
 # path to tools
 star=/scratch/users/k2142172/packages/STAR-2.7.8a/bin/Linux_x86_64_static/STAR
-#samtools=/scratch/users/k2142172/packages/samtools-1.11/bin/samtools
 
 # import sample table as arrays for each column
 while read col1 col2 col3 col4; do
@@ -44,11 +43,7 @@ elif [[ ${paired_end} == no ]]; then
   mates=(${fq1[@]})
 fi
 
-# load star genome
-#$star --genomeDir ${resources_dir}/${build}/STAR --genomeLoad LoadAndExit
-
-# use loaded genome to run star, iterating over each paired end array item
-# include samtools indexing of bams in iteration
+# use genome to run star, iterating over each paired end array item
 for i in ${!mates[@]}; do
   $star \
     --runThreadN 8 \
@@ -61,5 +56,3 @@ for i in ${!mates[@]}; do
     --limitBAMsortRAM 30000000000 \
     --outSAMunmapped Within
 done
-# remove loaded genome
-$star --genomeDir ${resources_dir}/${build}/STAR --genomeLoad Remove
