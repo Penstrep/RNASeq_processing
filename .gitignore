@@ -1,3 +1,6 @@
+# conda env
+env/
+
 # notebooks output
 notebooks/
 *.html
