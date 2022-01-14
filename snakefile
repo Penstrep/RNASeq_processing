@@ -1,29 +1,38 @@
-configfile: 'config.yaml'
+configfile: 'config.yml'
+
 
 rule all:
 	input:
-#                expand('{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip', sample=config['sample'], base_dir=config['base_dir']),
+#               expand('{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip', sample=config['sample'], base_dir=config['base_dir']),
 #		'{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip',
 		expand('{base_dir}/outputs/snake/fastqc/{sample}_multiqc.html', sample=config['sample'], base_dir=config['base_dir'])
 #		'{base_dir}/outputs/snake/fastqc/{sample}_multiqc.html'
 
 rule fastqc:
 	output: 
-		'{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip'
+		zip='{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip',
+		html='{base_dir}/outputs/snake/fastqc/{sample}_fastqc/html'
 	input: 
 #		'{base_dir}/raw_data/verstockt_ibd/{sample}.fastq.gz'
-		fq=expand('{base_dir}/raw_data/verstockt_ibd/{sample}.fastq.gz', sample=config['sample'], base_dir=config['base_dir'])
+		fq=expand('{base_dir}/raw_data/{project}/{sample}.fastq.gz', base_dir=config['base_dir'], project=config['project'], sample=config['sample'])
+#		fq=expand('config['base_dir']/raw_data/verstockt_ibd/config['sample'].fastq.gz')
+	param:
+		outdir='{base_dir}/outputs/snake/fastqc'
 	log: 
 		'{base_dir}/outputs/snake/fastqc/{sample}.out'
-	shell: '''
-#		module load apps/openjdk
-		/scratch/users/k2142172/packages/FastQC/fastqc {input} --outdir=/scratch/users/k2142172/outputs/snake/fastqc/
+	shell: 
 		'''
+		/scratch/users/k2142172/packages/FastQC/fastqc {input} --outdir={param.outdir}
+		'''
+#		/scratch/users/k2142172/packages/FastQC/fastqc {input} --outdir=/scratch/users/k2142172/outputs/snake/fastqc/
+#		'''
 
 rule multiqc_fastqc:
 	input: 
-		zip='{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip',
-		html='{base_dir}/outputs/snake/fastqc/{sample}_fastqc.html'
+		zip=rules.fastqc.output.zip
+		html=rules.fastqc.output.html
+#		zip='{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip',
+#		html='{base_dir}/outputs/snake/fastqc/{sample}_fastqc.html'
 	output: 
 		'{base_dir}/outputs/snake/fastqc/{sample}_multiqc.html'
 	log:
@@ -35,7 +44,7 @@ rule multiqc_fastqc:
 	
 rule star_alignment:
 	input:
-		index='{base_dir}/resources/STAR
+		index='{base_dir}/resources/STAR',
 		fqs=expand('{base_dir}/raw_data/verstockt_ibd/{sample}_fastq.gz', sample=config['sample'], base_dir=config['base_dir'])
 	output:
 		bams=expand('{base_dir}/outupts/snake/fastq/{sample}_', sample=config['sample'], base_dir=config['base_dir'])
@@ -65,9 +74,9 @@ rule index_bams:
 
 rule multiqc_index:
 	input: 
-		'{base_dir}/outputs/snake/fastqc
+		'{base_dir}/outputs/snake/fastqc'
 	output:
-		'{base_dir}/outputs/snake/fastqc/multiqc_index.html
+		'{base_dir}/outputs/snake/fastqc/multiqc_index.html'
 	shell: '''
 		/scratch/users/k2142172/packages/anaconda3/envs/r4/bin/multiqc {input} -n {output}
 		'''
