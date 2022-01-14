@@ -1,0 +1,66 @@
+################################################################
+# edit wildcards - comment out unwanted options
+
+# project name
+project:
+    - snake
+
+# samples IDs
+sample:
+    - ERR3262399
+    - ERR3262400
+
+# build - default human
+build: 
+    - human: GRCh38
+#    - mouse: GRCm39
+
+# paired end - default yes
+paired:
+    - yes
+#    - no
+
+# strand - default unstranded
+strand:
+    - Unstranded
+#    - Forward
+#    - Reverse
+
+# aligner - default star
+aligner:
+    - STAR
+#    - kallisto
+
+# base directory
+base_dir:
+    - /scratch/users/k2142172
+
+
+
+#####################################################################
+# constant wildcards
+
+# base directory with all relevant dirs
+base_dir:
+    - /scratch/users/k2142172
+
+
+# tools
+fastqc:
+    - /scratch/users/k2142172/packages/FastQC/fastqc
+multiqc:
+    - /scratch/users/k2142172/packages/anaconda
+star:
+    - /scratch/users/k2142172/packages/STAR-2.7.8a/bin/Linux_x86_64_static/STAR
+samtools:
+    - /scratch/users/k2142172/packages/samtools-1.11/bin/samtools
+featurecounts:
+    - /scratch/users/k2142172/packages/subread-2.0.1-Linux-x86_64/bin/featureCounts
+
+
+# star parameters
+
+
+# feature counts parameters
+feature:
+    - gene_id
