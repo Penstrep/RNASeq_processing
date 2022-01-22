@@ -5,118 +5,152 @@ configfile: 'config.yml'
 table = pd.read_table(config['sample_table'], header=None)
 sample = table[0][0:2]
 fq1 = table[1][0:2]
-#fq2 = table[2]
+#fq2 = table[2][0:2]'
 
 rule all:
 	input:
-#               expand('{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip', sample=config['sample'], base_dir=config['base_dir']),
-#		'{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip',
-		expand('{base_dir}/outputs/snake/fastqc/{sample}_multiqc.html', sample=sample, base_dir=config['base_dir'])
-#		'{base_dir}/outputs/snake/fastqc/{sample}_multiqc.html'
+                expand('{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip', sample=config['sample'], base_dir=config['base_dir']),
+		'{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip',
+		expand('{base_dir}/outputs/snake/fastqc/{sample}_multiqc.html', sample=sample, base_dir=config['base_dir']),
+		'{base_dir}/outputs/snake/multiqc/multiqc_fastqc.html',
+		expand('{base_dir}/outputs/snake/processed_bams/{sample}_Aligned.sortedByCoord.out.bam.bai', base_dir=config['base_dir'], sample=sample),
+		'{base_dir}/outputs/snake/multiqc/multiqc_star.html',
+		expand('{base_dir}/outputs/snake/samtools_stats/{sample}_idxstats.txt', base_dir=config['base_dir'], sample=sample),
+		'{base_dir}/outputs/snake/multiqc/multiqc_index.html',
+		'{base_dir}/outputs/snake/counts/gene_counts.tab'
 
 rule fastqc:
-	output: 
-		zip=expand('{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip', base_dir=config['base_dir'], sample=sample),
-		html=expand('{base_dir}/outputs/snake/fastqc/{sample}_fastqc.html', base_dir=config['base_dir'], sample=sample)
 	input: 
 		fq1=expand(fq1)
-#		fq2=expand(FQ2)
-#		'{base_dir}/raw_data/verstockt_ibd/{sample}.fastq.gz'
-#		fq=expand('{base_dir}/raw_data/verstockt_ibd/{sample}.fastq.gz', base_dir=config['base_dir'], project=config['project'], sample=config['sample'])
-#		fq=expand('config['base_dir']/raw_data/verstockt_ibd/config['sample'].fastq.gz')
+	output:
+		zip=expand('{base_dir}/outputs/{project}/fastqc/{sample}_fastqc.zip', base_dir=config['base_dir'], project=config['project'], sample=sample),
+		html=expand('{base_dir}/outputs/{project}/fastqc/{sample}_fastqc.html', base_dir=config['base_dir'], project=config['project'], sample=sample)
+        log:
+                expand('{base_dir}/outputs/{project}/logs/{sample}_fastqc.out', base_dir=config['base_dir'], project=config['project'], sample=sample)
 	params:
-		outdir='{base_dir}/outputs/snake/fastqc'
-#	log: 
-#		'{base_dir}/outputs/snake/fastqc/{sample}.out'
+		fastqc=config['fastqc'],
+		outdir=f'{config['base_dir']}/outputs/{config['project']}/fastqc'
 	shell: 
 		'''
-		echo {input}
-		{fastqc} {input} --outdir={params.outdir}
+		echo {params.outdir}
+		{params.fastqc} {input.fq1} --outdir={params.outdir}
 		'''
-#		/scratch/users/k2142172/packages/FastQC/fastqc {input} --outdir=/scratch/users/k2142172/outputs/snake/fastqc/
+
+rule multiqc_fastqc:
+	input: 
+		zip=rules.fastqc.output.zip,
+		html=rules.fastqc.output.html
+	output: 
+		'{base_dir}/outputs/snake/multiqc/{project}_multiqc_fastqc.html'
+        log:
+                '{base_dir}/outputs/snake/logs/{project}_multiqc_fastqc.out'
+	params:
+		multiqc=config['multiqc']
+	shell: '''
+		{params.multiqc} {input.zip} --ignore {input.html} -n {output}
+		'''
+	
+rule star_alignment:
+	input:
+		fq='{base_dir}/raw_data/verstockt_ibd/{sample}.fastq.gz'
+	output:
+		bam='{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Aligned.sortedByCoord.out.bam'
+	logs:
+		'{base_dir}/outputs/snake/logs/{sample}_star.out'
+	params:
+		star=config['star'],
+                index='/scratch/users/k2142172/resources/GRCh38/STAR/'
+	
+	shell: '''
+		{params.star} --runThreadN 8 --readFilesIn {input.fq} 
+		--readFilesCommand zcat --genomeLoad LoadAndKeep --genomeDir {params.index} --outFileNamePrefix {output.bam} 
+		--outSAMtype BAM SortedByCoordinate --limitBAMsortRAM 30000000000 outSAMunmapped Within
+		'''
+
+rule multiqc_star:
+	input: 
+#		log_out=expand('{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Log.out', base_dir=config['base_dir'], sample=sample),
+#		log_final=expand('{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Log.final.out', base_dir=config['base_dir'], sample=sample)
+		logs=expand('{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Log.{ext}', base_dir=config['base_dir'], sample=sample, ext=['final.out', 'out'])
+	output:
+		'{base_dir}/outputs/snake/multiqc/{project}_multiqc_star.html'
+	params:
+		multiqc=config['multiqc']
+	shell: '''
+		{params.multiqc} {input.logs} -n {output}
+		'''
+
+
+rule index_bams:
+	input:
+                bam='{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Aligned.sortedByCoord.out.bam'
+#		bams=rules.star_alignment.output
+	output:
+		bai='{base_dir}/outputs/snake/processed_bams/{sample}_Aligned.sortedByCoord.out.bam.bai'
+	params:
+		samtools=config['samtools']
+	log:
+		'{base_dir}/outputs/snake/fastqc/{sample}_samtools.out'
+	shell: '''
+                {params.samtools} index -b {input.bam} > {output.bai}
+		'''
+
+
+rule bam_stats:
+	input:
+		bam='{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Aligned.sortedByCoord.out.bam'
+	output: 
+		stat='{base_dir}/outputs/snake/samtools_stats/{sample}_stats.txt',
+		idx='{base_dir}/outputs/snake/samtools_stats/{sample}_idxstats.txt'
+	params:
+		samtools=config['samtools']
+	shell: '''
+		{params.samtools} idxstats {input.bam} > {output.idx}
+		{params.samtools} stats {input.bam} > {output.stat}
+		'''	
+
+
+rule multiqc_index:
+	input: 
+		stats=expand(rules.bam_stats.output, base_dir=config['base_dir'], sample=sample)
+#		idxstats=expand('{base_dir}/outputs/verstockt_ibd/processed_bams/samtools_stats/{sample}_idxstats.txt', base_dir=config['base_dir'], sample=sample),
+#		stats=expand('{base_dir}/outputs/verstockt_ibd/processed_bams/samtools_stats/{sample}_stats.txt', base_dir=config['base_dir'], sample=sample)
+	output:
+		'{base_dir}/outputs/snake/multiqc/{project}_multiqc_index.html'
+	params:
+		multiqc=config['multiqc']
+	shell: '''
+		{params.multiqc} {input.stats} -n {output}
+		'''
+#		{params.multiqc} {input.idxstats} {input.stats} -n {output}
 #		'''
-#
-#rule multiqc_fastqc:
-#	input: 
-#		zip=rules.fastqc.output.zip,
-#		html=rules.fastqc.output.html
-#		zip='{base_dir}/outputs/snake/fastqc/{sample}_fastqc.zip',
-#		html='{base_dir}/outputs/snake/fastqc/{sample}_fastqc.html'
-#	output: 
-#		'{base_dir}/outputs/snake/fastqc/{project}_multiqc_fastqc.html'
-#	log:
-#		'{base_dir}/outputs/snake/fastqc/{project}_multiqc_fastqc.out'
-#	shell: '''
-#		/scratch/users/k2142172/packages/anaconda3/envs/r4/bin/multiqc {input.zip} 
-#		--ignore {input.html} -n {output}
-#		'''
-#	
-#rule star_alignment:
-#	input:
-#		index='{base_dir}/resources/STAR',
-#		fqs=expand('{base_dir}/raw_data/verstockt_ibd/{sample}_fastq.gz', sample=sample, base_dir=config['base_dir'])
-#	output:
-#		bams=expand('{base_dir}/outupts/snake/fastq/{sample}_', sample=sample, base_dir=config['base_dir'])
-#	shell: '''
-#		/scratch/users/k2142172/packages/STAR-2.7.8a/bin/Linux_x86_64_static/STAR --runThreadN 8 --readFilesIn {input.fqs} 
-#		--readFilesCommand zcat --genomeLoad LoadAndKeep --genomeDir {input.index} --outFileNamePrefix {output} 
-#		--outSAMtype BAM SortedByCoordinate --limitBAMsortRAM 30000000000 outSAMunmapped Within
-#		'''
-#
-#
-#rule index_bams:
-#	input:
-#               bams=expand('{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Aligned.sortedByCoord.out.bam', sample=sample, base_dir=config['base_dir'])
-#	output:
-#		bai=expand('{base_dir}/outputs/snake/fastqc/{sample}_Aligned.sortedByCoord.out.bam.bai', sample=sample, base_dir=config['base_dir'])
-#		idxstats='{base_dir}/outputs/snake/fastqc/{sample}_idxstats.txt',
-#		stats='{base_dir}/outputs/snake/fastqc/{sample}_stats.txt'
-#	log:
-#		'{base_dir}/outputs/snake/fastqc/{sample}_samtools.out'
-#	shell: '''
-#		/scratch/users/k2142172/packages/samtools-1.11/bin/samtools index -b {input} {output.bai}
-#		'''
-#		/scratch/users/k2142172/packages/samtools-1.11/bin/samtools idxstats {input} > {output.idxstats}
-#		/scratch/users/k2142172/packages/samtools-1.11/bin/samtools stats {input} > {output.stats}
-#		'''
-#
-#
-#rule multiqc_index:
-#	input: 
-#		'{base_dir}/outputs/snake/fastqc'
-#	output:
-#		'{base_dir}/outputs/snake/fastqc/multiqc_index.html'
-#	shell: '''
-#		/scratch/users/k2142172/packages/anaconda3/envs/r4/bin/multiqc {input} -n {output}
-#		'''
-#
-#rule counts:
-#	input:
-#		bams=expand('{base_dir}/outputs/verstockt_ibd/processed_bams/{sample}_Aligned.sortedByCoord.out.bam', sample=config['sample'], base_dir=config['base_dir']),
-#		gtf='{base_dir}/resources/GRCh38/Homo_sapiens.GRCh38.103.gtf'
-#	output:
-#		'{base_dir}/outputs/snake/fastqc/gene_counts.tab'
-#	params:
-#		feat=config['feature']
+
+rule counts:
+	input:
+		bams=expand(rules.star_alignment.output.bam, base_dir=config['base_dir'], sample=sample),
+		gtf='{base_dir}/resources/GRCh38/Homo_sapiens.GRCh38.103.gtf'
+	output:
+		'{base_dir}/outputs/snake/counts/{project}_gene_counts.tab',
+		'{base_dir}/outputs/snake/counts/{project}_gene_counts.tab.summary'
+	params:
+		fc=config['featurecounts'],
+		feature=config['feature'],
+		strand=config['strand']
 #	log: 
 #		'{base_dir}/outputs/snake/fastqc/counts.out'
-#	shell:	'''
-#		/scratch/users/k2142172/packages/subread-2.0.1-Linux-x86_64/bin/featureCounts \
-#		-a {input.gtf} \
-#		-F GTF \
-#		-g {params.feat} \
-#		--verbose \
-#		-o {output} \
-#		{input.bams}
-#		'''
-#		
-#rule multiqc_counts:
-#	input:
-#		'{base_dir}/outputs/snake/fastqc'
-#	output:
-#		'{base_dir}/outputs/snake/fastqc/multiqc_featurecounts.html'
+	shell:	'''
+		{params.fc} -a {input.gtf} -F GTF -g {params.feature} -s {params.strand} --verbose -o {output} {input.bams}
+		'''
+		
+rule multiqc_counts:
+	input:
+		'{base_dir}/outputs/verstockt_ibd/gene_expression/verstockt_ibd_gene_counts.tab.summary'
+	output:
+		'{base_dir}/outputs/snake/multiqc/{project}_multiqc_featurecounts.html'
+	params:
+		multiqc=config['multiqc']
 #	log:
 #		'{base_dir}/outputs/snake/fastqc/multiqc_featurecounts.out'
-#	shell: '''
-#		/scratch/users/k2142172/packages/anaconda3/envs/r4/bin/multiqc {input} -n {output}
-#		'''
+	shell: '''
+		{params.multiqc} {input} -n {output}
+		'''
