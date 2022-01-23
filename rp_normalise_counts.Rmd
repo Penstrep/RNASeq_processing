@@ -1,11 +1,11 @@
 ---
 title: "Normalised Counts"
 author: "Prasanth Sivakumar"
-date: "`r Sys.Date()`"
+date: !r Sys.Date()
 output: html_document
 params:
-  counts.matrix: 'counts_matrix',
-  sample.table: 'sample_table'
+    counts_matrix: 'counts_matrix'
+    sample_table: 'sample_table'
 ---
 
 Auto-generated document to provide basic quality control steps on the featureCounts counts matrix output. \
@@ -29,8 +29,8 @@ Input data is the gene expression tab file output from featureCounts, and the sa
 
 ```{r data, include=TRUE}
 # load counts matrix file and sample table
-df <- read.table('C:/Users/Prasanth/Documents/barcella_sepsis/gene_expression/barcella_sepsis_gene_counts_old.tab', header = T, row.names = 1, skip = 1)
-st <- read.table('C:/Users/Prasanth/Documents/barcella_sepsis/barcella_sepsis_sample_table.tab')
+df <- read.table(params$counts_matrix, header = T, row.names = 1, skip = 1)
+st <- read.table(params$sample_table)
 ```
 
 ```{r cm}
