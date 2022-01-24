@@ -13,3 +13,7 @@ aligner=STAR
 out_dir=/scratch/users/k2142172/tests/seq
 # path to where resources are held eg STAR genome index, reference build fasta and gtf
 resources_dir=/scratch/users/k2142172/resources
+# drop samples for counts matrix qc? options TRUE/FALSE
+drop_samples=FALSE
+# samples to drop if drop_samples=TRUE format: 'sample1_ID sample2_ID sample3_ID'
+dropped_samples=''
