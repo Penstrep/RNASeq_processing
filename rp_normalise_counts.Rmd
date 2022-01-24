@@ -4,6 +4,8 @@ author: "Prasanth Sivakumar"
 date: "`r Sys.Date()`"
 output: html_document
 params:
+    project: 'project'
+    out_dir: 'out_dir'
     counts_matrix: 'counts_matrix'
     drop_samples: FALSE
     dropped_samples: NA
@@ -143,8 +145,10 @@ print(plotDist(ncm))
 ```
 
 ```{r write}
-save(cm, file = 'non_zero_counts_matrix.RData')
-save(ncm, file = 'norm_counts_matrix.RData')
+print(paste0(params$out_dir, '/gene_expression/', params$project, '_non_zero_counts_matrix.RData', sep=''))
+print(paste0(params$out_dir, '/gene_expression/', params$project, '_norm_counts_matrix.RData', sep=''))
+save(cm, file = paste0(params$out_dir, '/', params$project, '_non_zero_counts_matrix.RData', sep=''))
+save(ncm, file = paste0(params$out_dir, '/', params$project, '_norm_counts_matrix.RData', sep=''))
 ```
 
 This document additionally creates a non-zero counts matrix data file (**non_zero_counts_matrix.RData**), and a normalised counts matrix data file (**norm_counts_matrix.RData**).
