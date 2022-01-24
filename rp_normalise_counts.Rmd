@@ -54,7 +54,7 @@ ids <- str_remove(colnames(cm), '^.*bams.') %>% str_remove('_Aligned.*$')
 
 # create comparison dataframe of old and new matrix IDS
 names.df <- data.frame(
-  counts_matrix_name = colnames(cm), 
+  counts_matrix_name = colnames(cm),
   new_names = ids
 )
 print(names.df)
@@ -87,17 +87,17 @@ zcm <- filtZeroCounts(zcm)
 print(dim(zcm))
 ```
 
-Bar chart of total counts assigned to genes in each sample, before normalisation. 
+Bar chart of total counts assigned to genes in each sample, before normalisation.
 
 ```{r sum}
 sf <- estimateSizeFactorsForMatrix(zcm)
 
-plotColsums <- function(mat){ 
+plotColsums <- function(mat){
   colSums(mat) %>%
-    as.data.frame() %>% 
-    `colnames<-`('sf') %>% 
-    rownames_to_column('sample') %>% 
-    ggplot(aes(sample, sf)) + 
+    as.data.frame() %>%
+    `colnames<-`('sf') %>%
+    rownames_to_column('sample') %>%
+    ggplot(aes(sample, sf)) +
     geom_col() +
     theme_classic() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) +
@@ -121,24 +121,37 @@ print(plotColsums(ncm))
 Scatter plot of log10 counts for each of 20 genes (no particular selection). Overlaid violin plots and boxplots to illustrate distribution. Log10 counts from non-normalised counts matrix after filtering for 0 count genes.
 
 ```{r dist}
+getGenes <- function(ncm){
+  df <- as.data.frame(ncm) %>%
+    rownames_to_column('gene') %>%
+    mutate(rsum = rowSums(ncm)) %>%
+    arrange(desc(rsum))
+  ind <- seq(1, nrow(df), length = 20)
+  genes <- df[ind, 'gene']
+  return(genes)
+}
+
+genes <- getGenes(ncm)
+
 plotDist <- function(mat){
-  as.data.frame(mat)[1:20, ] %>% 
-    rownames_to_column('gene') %>% 
+  as.data.frame(mat) %>%
+    rownames_to_column('gene') %>%
+    filter(gene %in% genes) %>%
     pivot_longer(2:last_col(), names_to = 'sample') %>%
-    ggplot(aes(gene, log10(value))) + 
-    geom_violin(aes(colour = gene)) + 
+    ggplot(aes(gene, log10(value))) +
+    geom_violin(aes(colour = gene)) +
     geom_jitter(size = 0.5, alpha = 0.2) +
     geom_boxplot(alpha = 0.2) +
     theme_classic() +
-    theme(axis.text.x = element_text(angle = 75, hjust = 1, vjust = 1, size = 7), 
+    theme(axis.text.x = element_text(angle = 75, hjust = 1, vjust = 1, size = 7),
           legend.position = 'None') +
     labs(x = 'Gene', y = 'Log10 counts')
 }
 
-print(plotDist(cm))
+print(plotDist(zcm))
 ```
 
-Scatter plot of log10 counts for the same genes post-normalisation. 
+Scatter plot of log10 counts for the same genes post-normalisation.
 
 ```{r normdist}
 print(plotDist(ncm))
