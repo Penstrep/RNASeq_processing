@@ -79,18 +79,18 @@ Dimensions of the counts matrix after filtering. Remove any samples if specified
 ```{r zero}
 if (params$drop_samples == TRUE){
     ds <- unlist(strsplit(params$dropped_samples, split = ' '))
-    cm <- cm[, !colnames(cm) %in% ds]
+    zcm <- cm[, !colnames(cm) %in% ds]
 }
 
-cm <- filtZeroCounts(cm)
+zcm <- filtZeroCounts(zcm)
 
-print(dim(cm))
+print(dim(zcm))
 ```
 
 Bar chart of total counts assigned to genes in each sample, before normalisation. 
 
 ```{r sum}
-sf <- estimateSizeFactorsForMatrix(cm)
+sf <- estimateSizeFactorsForMatrix(zcm)
 
 plotColsums <- function(mat){ 
   colSums(mat) %>%
@@ -106,7 +106,7 @@ plotColsums <- function(mat){
 }
 
 
-ncm <- sweep(cm, 2, sf, '/')
+ncm <- sweep(zcm, 2, sf, '/')
 
 print(plotColsums(cm))
 ```
@@ -118,7 +118,7 @@ Bar chart of counts after normalisation using estimated differenes in samples, p
 print(plotColsums(ncm))
 ```
 
-Scatter plot of log10 counts for each of 20 genes (no particular selection). Overlaid violin plots and boxplots to illustrate distribution. Log10 counts from non-normalised counts matrix.
+Scatter plot of log10 counts for each of 20 genes (no particular selection). Overlaid violin plots and boxplots to illustrate distribution. Log10 counts from non-normalised counts matrix after filtering for 0 count genes.
 
 ```{r dist}
 plotDist <- function(mat){
@@ -138,17 +138,16 @@ plotDist <- function(mat){
 print(plotDist(cm))
 ```
 
-Scatter plot of log10 counts for the same genes post-normalisation. The inter-quartile range of sample log10 count values for each gene is broadly reduced. 
+Scatter plot of log10 counts for the same genes post-normalisation. 
 
 ```{r normdist}
 print(plotDist(ncm))
 ```
 
 ```{r write}
-print(paste0(params$out_dir, '/gene_expression/', params$project, '_non_zero_counts_matrix.RData', sep=''))
-print(paste0(params$out_dir, '/gene_expression/', params$project, '_norm_counts_matrix.RData', sep=''))
-save(cm, file = paste0(params$out_dir, '/', params$project, '_non_zero_counts_matrix.RData', sep=''))
-save(ncm, file = paste0(params$out_dir, '/', params$project, '_norm_counts_matrix.RData', sep=''))
+data.path <- paste0(params$out_dir, '/gene_expression/', sep='')
+save(cm, file = paste0(data.path, params$project, '_non_zero_counts_matrix.RData', sep=''))
+save(ncm, file = paste0(data.path, params$project, '_norm_counts_matrix.RData', sep=''))
 ```
 
 This document additionally creates a non-zero counts matrix data file (**non_zero_counts_matrix.RData**), and a normalised counts matrix data file (**norm_counts_matrix.RData**).
