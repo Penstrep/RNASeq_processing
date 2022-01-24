@@ -41,5 +41,7 @@ elif [[ $step == counts_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_counts_matrix.sh
 elif [[ $step == multiqc_featurecounts_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc_featurecounts.sh
+elif [[ $step == counts_qc_step ]]; then
+    sbatch /scratch/users/k2142172/scripts/pipeline/rp_counts_qc.sh
 fi
 
