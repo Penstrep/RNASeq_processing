@@ -66,16 +66,24 @@ colnames(cm) <- ids
 Dimension of the counts matrix before filtering: rows (genes) by columns (samples).
 
 ```{r dims}
-# remove all genes wiht 0 counts in any sample from matrix
+# remove all genes with low counts in any sample from matrix
 filtCounts <- function(mat){
   #mat[apply(mat, 1, function(x) all(x !=0 )), ]
-  mat[which(rowSums(mat) > (dim(mat)[2])/4), ]
+  mat[which(rowSums(mat) > as.integer((dim(mat)[2])/4)), ]
 }
 
 print(dim(cm))
 ```
 
-Dimensions of the counts matrix after filtering. Remove any samples if specified in the submission script, and then remove any genes with 0 counts in any remaining sample.
+Dimensions of the counts matrix after filtering. Remove any samples if specified in the submission script, and then remove any genes with low counts.
+
+Low total counts threshold, below which genes are removed.
+
+```{r filt}
+print(as.integer((dim(cm)[2])/4))
+```
+
+Dimensions of counts matrix post-filtering.
 
 ```{r zero}
 if (params$drop_samples == TRUE){
@@ -119,7 +127,7 @@ Bar chart of counts after normalisation using estimated differenes in samples, p
 print(plotColsums(ncm))
 ```
 
-Scatter plot of log10 counts for each of 20 genes (no particular selection). Overlaid violin plots and boxplots to illustrate distribution. Log10 counts from non-normalised counts matrix after filtering for 0 count genes.
+Scatter plot of log10 counts for each of 20 genes (chosen across the range of total expression levels). Overlaid violin plots and boxplots to illustrate distribution. Log10 counts from non-normalised counts matrix after filtering for low count genes.
 
 ```{r dist}
 getGenes <- function(ncm){
