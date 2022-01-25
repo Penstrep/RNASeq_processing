@@ -67,8 +67,9 @@ Dimension of the counts matrix before filtering: rows (genes) by columns (sample
 
 ```{r dims}
 # remove all genes wiht 0 counts in any sample from matrix
-filtZeroCounts <- function(mat){
-  mat[apply(mat, 1, function(x) all(x !=0 )), ]
+filtCounts <- function(mat){
+  #mat[apply(mat, 1, function(x) all(x !=0 )), ]
+  mat[which(rowSums(mat) > (dim(mat)[2])/4), ]
 }
 
 print(dim(cm))
@@ -82,7 +83,7 @@ if (params$drop_samples == TRUE){
     zcm <- cm[, !colnames(cm) %in% ds]
 }
 
-zcm <- filtZeroCounts(zcm)
+zcm <- filtCounts(zcm)
 
 print(dim(zcm))
 ```
