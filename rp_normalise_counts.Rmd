@@ -159,7 +159,7 @@ print(plotDist(ncm))
 
 ```{r write}
 data.path <- paste0(params$out_dir, '/gene_expression/', sep='')
-save(cm, file = paste0(data.path, params$project, '_non_zero_counts_matrix.RData', sep=''))
+save(zcm, file = paste0(data.path, params$project, '_non_zero_counts_matrix.RData', sep=''))
 save(ncm, file = paste0(data.path, params$project, '_norm_counts_matrix.RData', sep=''))
 ```
 
