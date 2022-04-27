@@ -1,8 +1,10 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
-#SBATCH --time=24:00:00
-#SBATCH --mem=8G
+#SBATCH --partition=brc,shared
+#SBATCH --time=06:00:00
+#SBATCH --mem=16G
+#SBATCH --ntasks=2
+#SBATCH --cpus-per-task=8
 #SBATCH --job-name=r_pipeline
 #SBATCH --verbose
 #SBATCH --output=/scratch/users/k2142172/tests/rp_trim.out
