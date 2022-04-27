@@ -27,6 +27,8 @@ if [[ $step == fastqc_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_fastqc.sh
 elif [[ $step == multiqc_fastqc_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_multiqc_fastqc.sh
+elif [[ $step == trim_step ]]; then
+    sbatch /scratch/users/k2142172/scripts/pipeline/rp_trim.sh
 elif [[ $step == alignment_step ]]; then
     sbatch /scratch/users/k2142172/scripts/pipeline/rp_alignment.sh
 elif [[ $step == multiqc_star_step ]]; then
