@@ -1,23 +1,25 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=24:00:00
 #SBATCH --mem=16G
 #SBATCH --ntasks=8
-#SBATCH --nodes=1
+#SBATCH --nodes=2
 #SBATCH --job-name=r_pipeline
 #SBATCH --output=/scratch/users/k2142172/tests/rp_counts_matrix.out
 #SBATCH --verbose
 
 # script exits if return value of a command is not zero
 set -e
-# prints lines of script as they are run
+# this forces all variables to be defined
+set -u
+# print shell input lines as they are read for debugging
 set -v
-# prevents overwriting of existing files through redirection
+# prevents output redirection from overwriting existing files
 set -o noclobber
 
 # import config variables
-. ./$config
+. $config
 
 # create output dir if necessary, and redirect log and err files there
 mkdir -p ${out_dir}/gene_expression/${aligner}

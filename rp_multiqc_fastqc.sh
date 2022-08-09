@@ -15,7 +15,7 @@ set -v
 set -o noclobber
 
 # import config variables
-. ./$config
+. $config
 
 # redirect log and err files 
 exec >${out_dir}/fastqc/${project}_rp_multiqc_fastqc.out 2>${out_dir}/fastqc/${project}_rp_multiqc_fastqc.err

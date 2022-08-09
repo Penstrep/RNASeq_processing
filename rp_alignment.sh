@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=12:00:00
 #SBATCH --mem=42G
 #SBATCH --ntasks=1
@@ -11,17 +11,19 @@
 
 # script exits if return value of a command is not zero
 set -e
+# this forces all variables to be defined
+set -u
 # print shell input lines as they are read for debugging
 set -v
 # prevents output redirection from overwriting existing files
-#set -o noclobber
+set -o noclobber
 
 # import config variables
-. ./$config
+. $config
 
 # create output dir if necessary, and redirect log and err files there
 mkdir -p ${out_dir}/processed_bams
-#exec >/${out_dir}/processed_bams/${project}_rp_alignment.out 2>${out_dir}/processed_bams/${project}_rp_alignment.err
+exec >/${out_dir}/processed_bams/${project}_rp_alignment.out 2>${out_dir}/processed_bams/${project}_rp_alignment.err
 
 # path to tools
 star=/scratch/users/k2142172/packages/STAR-2.7.8a/bin/Linux_x86_64_static/STAR

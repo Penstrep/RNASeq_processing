@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=00:30:00
 #SBATCH --mem=6G
 #SBATCH --job-name=r_pipeline
@@ -10,7 +10,7 @@
 # added -l to bash interpret to use login mode so conda env can be used
 
 # import config variables
-. ./$config
+. $config
 
 # create output dir if necessary, and redirect log and err files there
 exec >${out_dir}/gene_expression/${project}_rp_counts_qc.out 2>${out_dir}/gene_expression/${project}_rp_counts_qc.out

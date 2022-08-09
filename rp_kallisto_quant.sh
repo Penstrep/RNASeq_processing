@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --mem=8G
 #SBATCH --time=08:00:00
 #SBATCH --ntasks=2
@@ -11,13 +11,15 @@
 
 # script exits if return value of a command is not zero
 set -e
+# this forces all variables to be defined
+set -u
 # print shell input lines as they are read for debugging
 set -v
 # prevents output redirection from overwriting existing files
-#set -o noclobber
+set -o noclobber
 
 # import config variables
-. ./$config
+. $config
 
 # create output dir if necessary, and redirect log and err files there
 mkdir -p ${out_dir}/kallisto
@@ -27,7 +29,6 @@ exec >/${out_dir}/kallisto/${project}_rp_kallisto_quant.out 2>${out_dir}/kallist
 kallisto=/scratch/users/k2142172/packages/kallisto/kallisto
 kallisto_index=${resources_dir}/${build}/kallisto/kallisto.idx
 gtf=$(ls ${resources_dir}/${build}/*.gtf)
-#samtools=/scratch/users/k2142172/packages/samtools-1.11/bin/samtools
 
 # import sample table as arrays for each column
 while read col1 col2 col3 col4; do

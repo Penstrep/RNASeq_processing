@@ -1,3 +1,5 @@
+## UNFINISHED
+
 #!/bin/bash
 
 #SBATCH --partition=brc,shared
@@ -17,7 +19,7 @@
 #set -x
 
 # import config variables
-. ./$config
+. $config
 
 # create output dir if necessary, and redirect log and err files there
 mkdir -p ${out_dir}/trim

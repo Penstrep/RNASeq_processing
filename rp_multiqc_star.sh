@@ -15,7 +15,7 @@ set -v
 set -o noclobber
 
 # import config variables
-. ./$config
+. $config
 
 # redirect log and err files 
 exec >${out_dir}/processed_bams/${project}_rp_multiqc_star.out 2>${out_dir}/processed_bams/${project}_rp_multiqc_star.err

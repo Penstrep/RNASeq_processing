@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=4:00:00
 #SBATCH --mem=8G
 #SBATCH --job-name=r_pipeline
@@ -9,12 +9,14 @@
 
 # script exits if return value of a command is not zero
 set -e
+# this forces all variables to be defined
+set -u
 # print shell input lines as they are read for debugging
 set -v
 # prevents output redirection from overwriting existing files
 set -o noclobber
 
-. ./$config
+. $config
 
 mkdir -p ${out_dir}/processed_bams/samtools_stats
 

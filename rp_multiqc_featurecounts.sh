@@ -15,7 +15,7 @@ set -v
 set -o noclobber
 
 # import config variables
-. ./$config
+. $config
 
 # redirect log and err files 
 exec >${out_dir}/gene_expression/${project}_rp_multiqc_featurecounts.out 2>${out_dir}/gene_expression/${project}_rp_multiqc_featurecounts.err

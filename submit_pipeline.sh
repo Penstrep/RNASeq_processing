@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=00:10:00
 #SBATCH --mem=50M
 #SBATCH --job-name=rp_submit
@@ -9,6 +9,8 @@
 
 # script exits if return value of a command is not zero
 set -e
+# this forces all variables to be defined
+set -u
 # print shell input lines as they are read for debugging
 set -v
 # prevents output redirection from overwriting existing files
@@ -19,14 +21,16 @@ args=("$@")
 sample_table=${args[0]}
 config=${args[1]}
 
-fastqc_step=/scratch/users/k2142172/scripts/pipeline/rp_fastqc.sh
-multiqc_fastqc_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_fastqc.sh
-alignment_step=/scratch/users/k2142172/scripts/pipeline/rp_alignment.sh
-multiqc_star_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_star.sh
-index_step=/scratch/users/k2142172/scripts/pipeline/rp_index_bams.sh
-multiqc_samtools_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_samtools.sh
-counts_step=/scratch/users/k2142172/scripts/pipeline/rp_counts_matrix.sh
-multiqc_featurecounts_step=/scratch/users/k2142172/scripts/pipeline/rp_multiqc_featurecounts.sh
+scripts_dir=/scratch/users/k2142172/scripts/RNASeq_processing
+
+fastqc_step=${scripts_dir}/rp_fastqc.sh
+multiqc_fastqc_step=${scripts_dir}/rp_multiqc_fastqc.sh
+alignment_step=${scripts_dir}/rp_alignment.sh
+multiqc_star_step=${scripts_dir}/rp_multiqc_star.sh
+index_step=${scripts_dir}/rp_index_bams.sh
+multiqc_samtools_step=${scripts_dir}/rp_multiqc_samtools.sh
+counts_step=${scripts_dir}/rp_counts_matrix.sh
+multiqc_featurecounts_step=${scripts_dir}/rp_multiqc_featurecounts.sh
 
 export config=$config
 export sample_table=$sample_table

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=3:00:00
 #SBATCH --mem=80G
 #SBATCH --ntasks=8
