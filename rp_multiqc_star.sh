@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=1:00:00
 #SBATCH --mem=1G
 #SBATCH --job-name=r_pipeline
@@ -12,7 +12,7 @@ set -e
 # print shell input lines as they are read for debugging
 set -v
 # prevents output redirection from overwriting existing files
-set -o noclobber
+#set -o noclobber
 
 # import config variables
 . $config
@@ -21,9 +21,10 @@ set -o noclobber
 exec >${out_dir}/processed_bams/${project}_rp_multiqc_star.out 2>${out_dir}/processed_bams/${project}_rp_multiqc_star.err
 
 # multiqc
-module load apps/multiqc
+#module load apps/multiqc
+multiqc=/scratch/users/k2142172/packages/multiqc
 
-multiqc ${out_dir}/processed_bams/*Log* --ignore ${out_dir}/processed_bams/*bam* -n ${out_dir}/processed_bams/${project}_rp_multiqc_star.html
+$multiqc ${out_dir}/processed_bams/*Log* --ignore ${out_dir}/processed_bams/*bam* -n ${out_dir}/processed_bams/${project}_rp_multiqc_star.html
 
 
 

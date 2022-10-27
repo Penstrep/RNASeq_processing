@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=1:00:00
 #SBATCH --mem=1G
 #SBATCH --job-name=r_pipeline
@@ -21,9 +21,10 @@ set -o noclobber
 exec >${out_dir}/processed_bams/samtools_stats/${project}_rp_multiqc_samtools.out 2>${out_dir}/processed_bams/samtools_stats/${project}_rp_multiqc_samtools.err
 
 # multiqc
-module load apps/multiqc
+#module load apps/multiqc
+multiqc=/scratch/users/k2142172/packages/multiqc
 
-multiqc ${out_dir}/processed_bams/samtools_stats/* -n ${out_dir}/processed_bams/samtools_stats/${project}_rp_multiqc_samtools.html
+$multiqc ${out_dir}/processed_bams/samtools_stats/* -n ${out_dir}/processed_bams/samtools_stats/${project}_rp_multiqc_samtools.html
 
 
 

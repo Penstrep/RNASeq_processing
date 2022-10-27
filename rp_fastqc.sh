@@ -2,9 +2,9 @@
 
 #SBATCH --partition=cpu
 #SBATCH --time=06:00:00
-#SBATCH --mem=8G
-#SBATCH --ntasks=1
-#SBATCH	--cpus-per-task=4
+#SBATCH --mem=24G
+#SBATCH --ntasks=2
+#SBATCH	--cpus-per-task=8
 #SBATCH --job-name=r_pipeline
 #SBATCH --verbose
 #SBATCH --output=/scratch/users/k2142172/tests/rp_fastqc.out
@@ -16,7 +16,7 @@ set -u
 # print shell input lines as they are read for debugging
 set -v
 # prevents output redirection from overwriting existing files
-set -o noclobber
+#set -o noclobber
 
 # import config variables
 . $config

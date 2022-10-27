@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=1:00:00
 #SBATCH --mem=1G
 #SBATCH --job-name=r_pipeline
@@ -21,9 +21,10 @@ set -o noclobber
 exec >${out_dir}/gene_expression/${project}_rp_multiqc_featurecounts.out 2>${out_dir}/gene_expression/${project}_rp_multiqc_featurecounts.err
 
 # multiqc
-module load apps/multiqc
+#module load apps/multiqc
+multiqc=/scratch/users/k2142172/packages/multiqc
 
-multiqc ${out_dir}/gene_expression/ -n ${out_dir}/gene_expression/${project}_rp_multiqc_featurecounts.html
+$multiqc ${out_dir}/gene_expression/ -n ${out_dir}/gene_expression/${project}_rp_multiqc_featurecounts.html
 
 
 

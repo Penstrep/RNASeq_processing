@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=brc
+#SBATCH --partition=cpu
 #SBATCH --time=1:00:00
 #SBATCH --mem=4G
 #SBATCH --job-name=r_pipeline
@@ -21,9 +21,10 @@ set -o noclobber
 exec >${out_dir}/fastqc/${project}_rp_multiqc_fastqc.out 2>${out_dir}/fastqc/${project}_rp_multiqc_fastqc.err
 
 # multiqc
-module load apps/multiqc
+#module load apps/multiqc
+multiqc=/scratch/users/k2142172/packages/multiqc
 
-multiqc ${out_dir}/fastqc/*.zip --ignore ${out_dir}/fastqc/*.html -n ${out_dir}/fastqc/${project}_rp_multiqc_fastqc.html
+$multiqc ${out_dir}/fastqc/*.zip --ignore ${out_dir}/fastqc/*.html -n ${out_dir}/fastqc/${project}_rp_multiqc_fastqc.html
 
 
 
